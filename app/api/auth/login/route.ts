@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
+import ActivityLog from '@/models/ActivityLog';
 import { compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { ObjectId } from 'mongodb';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,8 +25,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
       // Log failed login attempt
       try {
-        const { db } = await connectToDatabase();
-        await db.collection('activity_logs').insertOne({
+        const activityLog = new ActivityLog({
           userId: null,
           action: 'Login Attempt',
           resource: 'Authentication',
@@ -36,6 +35,7 @@ export async function POST(request: NextRequest) {
           timestamp: new Date(),
           status: 'failed'
         });
+        await activityLog.save();
       } catch (logError) {
         console.error('Failed to log login attempt:', logError);
       }
@@ -51,9 +51,8 @@ export async function POST(request: NextRequest) {
     if (!isPasswordValid) {
       // Log failed login attempt
       try {
-        const { db } = await connectToDatabase();
-        await db.collection('activity_logs').insertOne({
-          userId: new ObjectId(user._id),
+        const activityLog = new ActivityLog({
+          userId: user._id,
           action: 'Login Attempt',
           resource: 'Authentication',
           details: `Failed login attempt for email: ${email} (invalid password)`,
@@ -62,6 +61,7 @@ export async function POST(request: NextRequest) {
           timestamp: new Date(),
           status: 'failed'
         });
+        await activityLog.save();
       } catch (logError) {
         console.error('Failed to log login attempt:', logError);
       }
@@ -111,9 +111,8 @@ export async function POST(request: NextRequest) {
 
     // Log successful login
     try {
-      const { db } = await connectToDatabase();
-      await db.collection('activity_logs').insertOne({
-        userId: new ObjectId(user._id),
+      const activityLog = new ActivityLog({
+        userId: user._id,
         action: 'Login',
         resource: 'Authentication',
         details: `Successful login for ${user.name} (${user.email})`,
@@ -122,6 +121,7 @@ export async function POST(request: NextRequest) {
         timestamp: new Date(),
         status: 'success'
       });
+      await activityLog.save();
     } catch (logError) {
       console.error('Failed to log successful login:', logError);
       // Don't fail the login if logging fails

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import connectToDatabase from '@/lib/mongodb';
 import Job from '@/models/Job';
+import ActivityLog from '@/models/ActivityLog';
 import { AuthRequest, authenticateUser, isAdmin, unauthorized, forbidden } from '@/middleware/auth';
-import { ObjectId } from 'mongodb';
 
 // GET - Fetch all jobs or filter jobs
 export async function GET(req: NextRequest) {
@@ -81,9 +81,8 @@ export async function POST(req: NextRequest) {
 
     // Log job creation activity
     try {
-      const { db } = await connectToDatabase();
-      await db.collection('activity_logs').insertOne({
-        userId: new ObjectId(authReq.user.id),
+      const activityLog = new ActivityLog({
+        userId: authReq.user?.id,
         action: 'Job Created',
         resource: 'Job Management',
         details: `Created job: ${jobData.title} at ${jobData.company} (${jobData.location})`,
@@ -92,6 +91,7 @@ export async function POST(req: NextRequest) {
         timestamp: new Date(),
         status: 'success'
       });
+      await activityLog.save();
     } catch (logError) {
       console.error('Failed to log job creation activity:', logError);
       // Don't fail the request if logging fails

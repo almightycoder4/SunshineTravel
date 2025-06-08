@@ -383,7 +383,7 @@ export default function AdminDashboard() {
   return (
     <div className="py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
+        {/* <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Job Listings Management</h1>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
               />
             </DialogContent>
           </Dialog>
-        </div>
+        </div> */}
 
         <div className="mb-6 flex items-center">
           <div className="relative w-full max-w-md">

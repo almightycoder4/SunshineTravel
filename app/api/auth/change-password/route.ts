@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import connectToDatabase from '@/lib/mongodb';
+import User from '@/models/User';
+import ActivityLog from '@/models/ActivityLog';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -61,12 +62,10 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    await connectToDatabase();
     
     // Get user from database
-    const user = await db.collection('users').findOne({
-      _id: new ObjectId(decoded.userId)
-    });
+    const user = await User.findById(decoded.userId);
 
     if (!user) {
       return NextResponse.json(
@@ -89,14 +88,13 @@ export async function PUT(request: NextRequest) {
     const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
     // Update password in database
-    const result = await db.collection('users').updateOne(
-      { _id: new ObjectId(decoded.userId) },
+    const result = await User.findByIdAndUpdate(
+      decoded.userId,
       { 
-        $set: { 
-          password: hashedNewPassword,
-          updatedAt: new Date()
-        }
-      }
+        password: hashedNewPassword,
+        updatedAt: new Date()
+      },
+      { new: true }
     );
 
     if (result.matchedCount === 0) {
@@ -108,8 +106,8 @@ export async function PUT(request: NextRequest) {
 
     // Log the password change activity (optional)
     try {
-      await db.collection('activity_logs').insertOne({
-        userId: new ObjectId(decoded.userId),
+      const activityLog = new ActivityLog({
+        userId: decoded.userId,
         action: 'Password Change',
         resource: 'User Account',
         details: 'Password changed successfully',
@@ -118,6 +116,7 @@ export async function PUT(request: NextRequest) {
         timestamp: new Date(),
         status: 'success'
       });
+      await activityLog.save();
     } catch (logError) {
       console.error('Failed to log password change activity:', logError);
       // Don't fail the request if logging fails

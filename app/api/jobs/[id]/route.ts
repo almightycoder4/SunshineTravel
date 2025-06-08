@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import connectToDatabase from '@/lib/mongodb';
 import Job from '@/models/Job';
+import ActivityLog from '@/models/ActivityLog';
 import { AuthRequest, authenticateUser, isAdmin, unauthorized, forbidden } from '@/middleware/auth';
-import { ObjectId } from 'mongodb';
 
 // GET - Fetch a single job by ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
@@ -72,9 +72,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     // Log job update activity
     try {
-      const { db } = await connectToDatabase();
-      await db.collection('activity_logs').insertOne({
-        userId: new ObjectId(authReq.user.id),
+      const activityLog = new ActivityLog({
+        userId: authReq.user?.id,
         action: 'Job Updated',
         resource: 'Job Management',
         details: `Updated job: ${originalJob.title} at ${originalJob.company} (ID: ${id})`,
@@ -83,6 +82,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         timestamp: new Date(),
         status: 'success'
       });
+      await activityLog.save();
     } catch (logError) {
       console.error('Failed to log job update activity:', logError);
       // Don't fail the request if logging fails
@@ -131,9 +131,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     // Log job deletion activity
     try {
-      const { db } = await connectToDatabase();
-      await db.collection('activity_logs').insertOne({
-        userId: new ObjectId(authReq.user.id),
+      const activityLog = new ActivityLog({
+        userId: authReq.user?.id,
         action: 'Job Deleted',
         resource: 'Job Management',
         details: `Deleted job: ${job.title} at ${job.company} (ID: ${id})`,
@@ -142,6 +141,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
         timestamp: new Date(),
         status: 'success'
       });
+      await activityLog.save();
     } catch (logError) {
       console.error('Failed to log job deletion activity:', logError);
       // Don't fail the request if logging fails

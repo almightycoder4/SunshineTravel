@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import connectToDatabase from '@/lib/mongodb';
+import User from '@/models/User';
+import ActivityLog from '@/models/ActivityLog';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -34,11 +35,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
-    const user = await db.collection('users').findOne(
-      { _id: new ObjectId(decoded.userId) },
-      { projection: { password: 0 } } // Exclude password from response
-    );
+    await connectToDatabase();
+    const user = await User.findById(decoded.userId).select('-password');
 
     if (!user) {
       return NextResponse.json(
@@ -99,12 +97,12 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    await connectToDatabase();
     
     // Check if email is already taken by another user
-    const existingUser = await db.collection('users').findOne({
+    const existingUser = await User.findOne({
       email,
-      _id: { $ne: new ObjectId(decoded.userId) }
+      _id: { $ne: decoded.userId }
     });
 
     if (existingUser) {
@@ -115,9 +113,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get current user data for comparison
-    const currentUser = await db.collection('users').findOne({
-      _id: new ObjectId(decoded.userId)
-    });
+    const currentUser = await User.findById(decoded.userId);
 
     if (!currentUser) {
       return NextResponse.json(
@@ -136,16 +132,16 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date()
     };
 
-    const result = await db.collection('users').findOneAndUpdate(
-      { _id: new ObjectId(decoded.userId) },
-      { $set: updateData },
+    const result = await User.findByIdAndUpdate(
+      decoded.userId,
+      updateData,
       { 
-        returnDocument: 'after',
-        projection: { password: 0 } // Exclude password from response
+        new: true,
+        select: '-password' // Exclude password from response
       }
     );
 
-    if (!result.value) {
+    if (!result) {
       return NextResponse.json(
         { success: false, error: 'User not found' },
         { status: 404 }
@@ -163,8 +159,8 @@ export async function PUT(request: NextRequest) {
       if (currentUser.bio !== (bio || '')) changedFields.push('bio');
 
       if (changedFields.length > 0) {
-        await db.collection('activity_logs').insertOne({
-          userId: new ObjectId(decoded.userId),
+        const activityLog = new ActivityLog({
+          userId: decoded.userId,
           action: 'Profile Update',
           resource: 'User Profile',
           details: `Updated fields: ${changedFields.join(', ')}`,
@@ -173,6 +169,7 @@ export async function PUT(request: NextRequest) {
           timestamp: new Date(),
           status: 'success'
         });
+        await activityLog.save();
       }
     } catch (logError) {
       console.error('Failed to log profile update activity:', logError);
@@ -182,7 +179,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Profile updated successfully',
-      user: result.value
+      user: result
     });
   } catch (error) {
     console.error('Profile update error:', error);

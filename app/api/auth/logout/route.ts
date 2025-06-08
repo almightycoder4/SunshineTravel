@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import connectToDatabase from '@/lib/mongodb';
+import ActivityLog from '@/models/ActivityLog';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
     // Log logout activity
     if (userId) {
       try {
-        const { db } = await connectToDatabase();
-        await db.collection('activity_logs').insertOne({
-          userId: new ObjectId(userId),
+        await connectToDatabase();
+        const activityLog = new ActivityLog({
+          userId: userId,
           action: 'Logout',
           resource: 'Authentication',
           details: `User logged out: ${userEmail}`,
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
           timestamp: new Date(),
           status: 'success'
         });
+        await activityLog.save();
       } catch (logError) {
         console.error('Failed to log logout activity:', logError);
         // Don't fail the logout if logging fails

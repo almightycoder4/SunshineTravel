@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import connectToDatabase from '@/lib/mongodb';
+import ActivityLog from '@/models/ActivityLog';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -49,11 +49,11 @@ export async function GET(request: NextRequest) {
     const action = searchParams.get('action');
     const search = searchParams.get('search');
 
-    const { db } = await connectToDatabase();
+    await connectToDatabase();
     
     // Build query filter
     const filter: any = {
-      userId: new ObjectId(decoded.userId)
+      userId: decoded.userId
     };
 
     if (status && status !== 'all') {
@@ -66,22 +66,20 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       filter.$or = [
-        { action: new RegExp(search, 'i') },
         { resource: new RegExp(search, 'i') },
         { details: new RegExp(search, 'i') }
       ];
     }
 
     // Get total count for pagination
-    const total = await db.collection('activity_logs').countDocuments(filter);
+    const total = await ActivityLog.countDocuments(filter);
 
     // Get activities with pagination
-    const activities = await db.collection('activity_logs')
-      .find(filter)
+    const activities = await ActivityLog.find(filter)
       .sort({ timestamp: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .toArray();
+      .lean();
 
     return NextResponse.json({
       success: true,
@@ -129,11 +127,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    await connectToDatabase();
     
     // Create activity log
-    const activityLog = {
-      userId: new ObjectId(decoded.userId),
+    const activityLog = new ActivityLog({
+      userId: decoded.userId,
       action,
       resource,
       details,
@@ -141,14 +139,14 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get('user-agent') || 'unknown',
       timestamp: new Date(),
       status
-    };
+    });
 
-    const result = await db.collection('activity_logs').insertOne(activityLog);
+    const result = await activityLog.save();
 
     return NextResponse.json({
       success: true,
       message: 'Activity logged successfully',
-      activityId: result.insertedId
+      activityId: result._id
     });
   } catch (error) {
     console.error('Activity log creation error:', error);

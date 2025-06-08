@@ -118,7 +118,7 @@ export default function WebActivityPage() {
   const mockActivities: ActivityLog[] = [
     {
       _id: '1',
-      userId: user?._id || '',
+      userId: user?.id || '',
       action: 'Login',
       resource: 'Admin Panel',
       details: 'Successful admin login',
@@ -129,7 +129,7 @@ export default function WebActivityPage() {
     },
     {
       _id: '2',
-      userId: user?._id || '',
+      userId: user?.id || '',
       action: 'Update',
       resource: 'Job Listing',
       details: 'Updated job posting "Senior Developer"',
@@ -140,7 +140,7 @@ export default function WebActivityPage() {
     },
     {
       _id: '3',
-      userId: user?._id || '',
+      userId: user?.id || '',
       action: 'Create',
       resource: 'Job Listing',
       details: 'Created new job posting "Marketing Manager"',
@@ -151,7 +151,7 @@ export default function WebActivityPage() {
     },
     {
       _id: '4',
-      userId: user?._id || '',
+      userId: user?.id || '',
       action: 'Delete',
       resource: 'Job Application',
       details: 'Deleted job application #12345',
@@ -162,7 +162,7 @@ export default function WebActivityPage() {
     },
     {
       _id: '5',
-      userId: user?._id || '',
+      userId: user?.id || '',
       action: 'Login',
       resource: 'Admin Panel',
       details: 'Failed login attempt',
