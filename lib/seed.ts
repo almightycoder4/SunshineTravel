@@ -2,7 +2,7 @@ import connectToDatabase from './mongodb';
 import Job from '@/models/Job';
 import User from '@/models/User';
 import { jobs } from './jobs';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 export async function seedJobs() {
   try {
