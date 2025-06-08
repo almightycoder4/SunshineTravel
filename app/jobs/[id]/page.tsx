@@ -1,7 +1,11 @@
-"use client";
+import { jobs } from "@/lib/jobs";
+import { notFound } from "next/navigation"; // Import notFound
 
-import { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+export async function generateStaticParams() {
+  return jobs.map((job) => ({
+    id: job.id.toString(),
+  }));
+}
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
@@ -24,31 +28,25 @@ import {
   Shield 
 } from "lucide-react";
 import { getJobById } from "@/lib/jobs";
-import AOS from "aos";
-import "aos/dist/aos.css";
+// import AOS from "aos"; // Moved to client component or commented out
+// import "aos/dist/aos.css"; // Moved to client component or commented out
 
-export default function JobDetailPage() {
-  const router = useRouter();
-  const params = useParams();
+export default function JobDetailPage({ params }: { params: { id: string } }) {
   const jobId = Number(params.id);
-  
   const job = getJobById(jobId);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      easing: "ease-in-out",
-    });
-    
-    if (!job) {
-      router.push("/jobs");
-    }
-  }, [job, router]);
-
   if (!job) {
-    return null;
+    notFound(); // Use notFound for missing job
   }
+
+  // useEffect(() => {
+  //   AOS.init({
+  //     duration: 800,
+  //     once: true,
+  //     easing: "ease-in-out",
+  //   });
+  // }, []); // AOS init would need to move to a client component
+
 
   return (
     <div className="py-32">
