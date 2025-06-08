@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn, Mail, Lock } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 export default function AdminLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form
@@ -41,13 +43,10 @@ export default function AdminLoginPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
-    // Simulate authentication
     try {
-      // In a real app, this would be an API call to authenticate
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await login(values.email, values.password);
       
-      // For demo purposes, hardcode a valid credential
-      if (values.email === "admin@sunshine.com" && values.password === "password123") {
+      if (result.success) {
         toast({
           title: "Login successful",
           description: "Welcome to the admin dashboard.",
@@ -59,7 +58,7 @@ export default function AdminLoginPage() {
       } else {
         toast({
           title: "Authentication failed",
-          description: "Invalid email or password. Please try again.",
+          description: result.message,
           variant: "destructive",
         });
       }
@@ -104,7 +103,6 @@ export default function AdminLoginPage() {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name="password"
@@ -114,17 +112,22 @@ export default function AdminLoginPage() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input type="password" placeholder="••••••" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  <Button type="submit" disabled={isSubmitting} className="w-full">
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? (
-                      <>Authenticating...</>
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Logging in...
+                      </>
                     ) : (
                       <>
                         <LogIn className="mr-2 h-4 w-4" />
@@ -134,11 +137,11 @@ export default function AdminLoginPage() {
                   </Button>
                 </form>
               </Form>
-
-              <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                <p>Demo credentials (for testing purposes):</p>
-                <p className="mt-1">Email: admin@sunshine.com</p>
-                <p>Password: password123</p>
+              
+              <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-md">
+                <h3 className="text-sm font-medium mb-2">Demo Credentials</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Email: admin@sunshine.com</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Password: password123</p>
               </div>
             </CardContent>
           </Card>

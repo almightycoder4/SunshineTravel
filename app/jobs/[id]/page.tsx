@@ -1,11 +1,7 @@
-import { jobs } from "@/lib/jobs";
-import { notFound } from "next/navigation"; // Import notFound
+"use client";
 
-export async function generateStaticParams() {
-  return jobs.map((job) => ({
-    id: job.id.toString(),
-  }));
-}
+import { useState, useEffect } from "react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
@@ -27,25 +23,80 @@ import {
   Scroll, 
   Shield 
 } from "lucide-react";
-import { getJobById } from "@/lib/jobs";
-// import AOS from "aos"; // Moved to client component or commented out
-// import "aos/dist/aos.css"; // Moved to client component or commented out
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+interface Job {
+  _id: string;
+  title: string;
+  company: string;
+  location: string;
+  country: string;
+  salary: string;
+  type: string;
+  trade: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+  benefits: string[];
+  featured: boolean;
+  experience: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {
-  const jobId = Number(params.id);
-  const job = getJobById(jobId);
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFoundError, setNotFoundError] = useState(false);
 
-  if (!job) {
-    notFound(); // Use notFound for missing job
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: "ease-in-out",
+    });
+  }, []);
+
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const response = await fetch(`/api/jobs/${params.id}`);
+        const data = await response.json();
+        
+        if (data.success && data.job) {
+          setJob(data.job);
+        } else {
+          setNotFoundError(true);
+        }
+      } catch (error) {
+        console.error('Error fetching job:', error);
+        setNotFoundError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Loading Job Details...</h1>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  // useEffect(() => {
-  //   AOS.init({
-  //     duration: 800,
-  //     once: true,
-  //     easing: "ease-in-out",
-  //   });
-  // }, []); // AOS init would need to move to a client component
+  if (notFoundError || !job) {
+    notFound();
+  }
 
 
   return (
