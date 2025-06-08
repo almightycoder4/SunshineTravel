@@ -5,24 +5,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Briefcase, MapPin, DollarSign, Search, Filter } from "lucide-react";
 import Link from "next/link";
-import { jobs, trades, countries, filterJobs, Job } from "@/lib/jobs";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+interface Job {
+  _id: string;
+  title: string;
+  company: string;
+  location: string;
+  country: string;
+  salary: string;
+  type: string;
+  trade: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+  benefits: string[];
+  featured: boolean;
+  experience: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 export default function JobsPage() {
-  const [filteredJobs, setFilteredJobs] = useState<Job[]>(jobs);
+  const [allJobs, setAllJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTrade, setSelectedTrade] = useState("All Trades");
-  const [selectedCountry, setSelectedCountry] = useState("All Countries");
+  const [selectedTrade, setSelectedTrade] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [trades, setTrades] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
   useEffect(() => {
@@ -34,13 +52,69 @@ export default function JobsPage() {
   }, []);
 
   useEffect(() => {
-    const results = filterJobs({
-      search: searchTerm,
-      trade: selectedTrade,
-      country: selectedCountry,
-    });
-    setFilteredJobs(results);
-  }, [searchTerm, selectedTrade, selectedCountry]);
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('/api/jobs');
+        const data = await response.json();
+        
+        if (data.success) {
+          setAllJobs(data.jobs);
+          setFilteredJobs(data.jobs);
+          
+          // Extract unique trades and countries
+          const uniqueTrades = [...new Set(data.jobs.map((job: Job) => job.trade).filter(Boolean))];
+          const uniqueCountries = [...new Set(data.jobs.map((job: Job) => job.country).filter(Boolean))];
+          
+          setTrades(uniqueTrades);
+          setCountries(uniqueCountries);
+        }
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    const filterJobs = () => {
+      let filtered = allJobs;
+
+      if (searchTerm) {
+        filtered = filtered.filter(job =>
+          job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      if (selectedTrade) {
+        filtered = filtered.filter(job => job.trade === selectedTrade);
+      }
+
+      if (selectedCountry) {
+        filtered = filtered.filter(job => job.country === selectedCountry);
+      }
+
+      setFilteredJobs(filtered);
+    };
+
+    filterJobs();
+  }, [allJobs, searchTerm, selectedTrade, selectedCountry]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Loading Jobs...</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-32">
@@ -89,6 +163,7 @@ export default function JobsPage() {
                     <SelectValue placeholder="Select trade" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="">All Trades</SelectItem>
                     {trades.map((trade) => (
                       <SelectItem key={trade} value={trade}>
                         {trade}
@@ -107,6 +182,7 @@ export default function JobsPage() {
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="">All Countries</SelectItem>
                     {countries.map((country) => (
                       <SelectItem key={country} value={country}>
                         {country}
@@ -124,7 +200,7 @@ export default function JobsPage() {
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job, index) => (
               <Card 
-                key={job.id} 
+                key={job._id} 
                 className={`border hover:shadow-md transition-all duration-300 ${job.featured ? 'border-l-4 border-l-blue-500' : ''}`}
                 data-aos="fade-up"
                 data-aos-delay={index * 50}
@@ -164,7 +240,7 @@ export default function JobsPage() {
                       </Badge>
                       
                       <div className="flex gap-3 mt-4 md:mt-0">
-                        <Link href={`/jobs/${job.id}`}>
+                        <Link href={`/jobs/${job._id}`}>
                           <Button variant="outline">View Details</Button>
                         </Link>
                         <Link href={`/apply?job=${job.title}`}>

@@ -1,7 +1,34 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
+import jwt from 'jsonwebtoken';
 
-export async function POST() {
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+// Helper function to verify JWT token
+function verifyToken(token: string) {
   try {
+    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string; role: string };
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // Get token for logging before clearing it
+    const token = request.cookies.get('token')?.value;
+    let userId = null;
+    let userEmail = 'unknown';
+    
+    if (token) {
+      const decoded = verifyToken(token);
+      if (decoded) {
+        userId = decoded.userId;
+        userEmail = decoded.email;
+      }
+    }
+
     // Create response
     const response = NextResponse.json(
       { success: true, message: 'Logged out successfully' },
@@ -18,6 +45,26 @@ export async function POST() {
       maxAge: 0, // Expire immediately
       path: '/',
     });
+
+    // Log logout activity
+    if (userId) {
+      try {
+        const { db } = await connectToDatabase();
+        await db.collection('activity_logs').insertOne({
+          userId: new ObjectId(userId),
+          action: 'Logout',
+          resource: 'Authentication',
+          details: `User logged out: ${userEmail}`,
+          ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
+          timestamp: new Date(),
+          status: 'success'
+        });
+      } catch (logError) {
+        console.error('Failed to log logout activity:', logError);
+        // Don't fail the logout if logging fails
+      }
+    }
 
     return response;
   } catch (error) {

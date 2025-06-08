@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,47 +9,31 @@ import { Briefcase, MapPin, DollarSign } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-// Sample job data
-const latestJobs = [
-  {
-    id: 1,
-    title: "Shuttering Carpenter",
-    company: "Al Futtaim Group",
-    location: "Dubai, UAE",
-    salary: "$1200 - $1500 per month",
-    type: "Full-time",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "Pipe Fitter",
-    company: "Saudi Aramco",
-    location: "Dammam, Saudi Arabia",
-    salary: "$1100 - $1400 per month",
-    type: "Contract",
-    featured: false,
-  },
-  {
-    id: 3,
-    title: "Electrician",
-    company: "Qatar Petroleum",
-    location: "Doha, Qatar",
-    salary: "$1300 - $1600 per month",
-    type: "Full-time",
-    featured: true,
-  },
-  {
-    id: 4,
-    title: "Mason",
-    company: "Emaar Properties",
-    location: "Dubai, UAE",
-    salary: "$1000 - $1300 per month",
-    type: "Full-time",
-    featured: false,
-  },
-];
+interface Job {
+  _id: string;
+  title: string;
+  company: string;
+  location: string;
+  country: string;
+  salary: string;
+  type: string;
+  trade: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+  benefits: string[];
+  featured: boolean;
+  experience: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export default function LatestJobs() {
+  const [latestJobs, setLatestJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -57,6 +41,38 @@ export default function LatestJobs() {
       easing: "ease-in-out",
     });
   }, []);
+
+  useEffect(() => {
+    const fetchLatestJobs = async () => {
+      try {
+        const response = await fetch('/api/jobs?featured=true');
+        const data = await response.json();
+        
+        if (data.success) {
+          // Get the latest 4 featured jobs
+          setLatestJobs(data.jobs.slice(0, 4));
+        }
+      } catch (error) {
+        console.error('Error fetching latest jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLatestJobs();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Loading...</h2>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20">
@@ -73,7 +89,7 @@ export default function LatestJobs() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {latestJobs.map((job, index) => (
             <Card 
-              key={job.id} 
+              key={job._id} 
               className={`border hover:border-blue-300 transition-all duration-300 ${job.featured ? 'border-blue-500 dark:border-blue-400' : ''}`}
               data-aos="fade-up"
               data-aos-delay={index * 100}
@@ -99,7 +115,7 @@ export default function LatestJobs() {
                 <div className="space-y-2 mb-6">
                   <div className="flex items-center text-gray-600 dark:text-gray-400">
                     <MapPin className="h-4 w-4 mr-2" />
-                    <span>{job.location}</span>
+                    <span>{job.location}, {job.country}</span>
                   </div>
                   <div className="flex items-center text-gray-600 dark:text-gray-400">
                     <DollarSign className="h-4 w-4 mr-2" />
@@ -111,7 +127,7 @@ export default function LatestJobs() {
                   <Link href={`/apply?job=${job.title}`}>
                     <Button>Apply Now</Button>
                   </Link>
-                  <Link href={`/jobs/${job.id}`} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                  <Link href={`/jobs/${job._id}`} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                     View Details →
                   </Link>
                 </div>
