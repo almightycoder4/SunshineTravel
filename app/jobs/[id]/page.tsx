@@ -16,7 +16,7 @@ import {
   Briefcase, 
   Building, 
   Calendar, 
-  DollarSign, 
+  IndianRupee, 
   Globe, 
   ListChecks, 
   MapPin, 
@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useAuth } from "@/context/AuthContext";
 
 interface Job {
   _id: string;
@@ -51,6 +52,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFoundError, setNotFoundError] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     AOS.init({
@@ -146,7 +148,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <DollarSign className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+                    <IndianRupee className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
                     <div>
                       <h3 className="font-medium">Salary</h3>
                       <p className="text-gray-600 dark:text-gray-400">{job.salary}</p>
@@ -223,11 +225,13 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Ready to take the next step in your career? Submit your application today!
                   </p>
-                  <Link href={`/apply?job=${job.title}`} className="w-full">
-                    <Button className="w-full" size="lg">
-                      Apply Now
-                    </Button>
-                  </Link>
+                  {user?.role !== 'admin' && (
+                    <Link href={`/apply?job=${job.title}`} className="w-full">
+                      <Button className="w-full" size="lg">
+                        Apply Now
+                      </Button>
+                    </Link>
+                  )}
                 </CardContent>
               </Card>
 

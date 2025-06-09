@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { User, Mail, Phone, MapPin, Calendar } from "lucide-react";
+import { User, Mail, Phone, MapPin, Calendar, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface UserProfile {
@@ -29,6 +29,7 @@ export default function AdminProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -95,6 +96,7 @@ export default function AdminProfilePage() {
 
       if (data.success) {
         setProfile(data.user);
+        setIsEditing(false);
         toast.success("Profile updated successfully");
       } else {
         toast.error(data.error || "Failed to update profile");
@@ -104,6 +106,24 @@ export default function AdminProfilePage() {
       toast.error("Error updating profile");
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset form data to original profile data
+    if (profile) {
+      setFormData({
+        name: profile.name || "",
+        email: profile.email || "",
+        phone: profile.phone || "",
+        address: profile.address || "",
+        bio: profile.bio || ""
+      });
     }
   };
 
@@ -171,10 +191,20 @@ export default function AdminProfilePage() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>Edit Profile</CardTitle>
-                <CardDescription>
-                  Update your personal information below
-                </CardDescription>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Profile Information</CardTitle>
+                    <CardDescription>
+                      {isEditing ? "Update your personal information below" : "View your personal information"}
+                    </CardDescription>
+                  </div>
+                  {!isEditing && (
+                    <Button onClick={handleEdit} variant="outline">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -188,6 +218,7 @@ export default function AdminProfilePage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Enter your full name"
+                        disabled={!isEditing}
                         required
                       />
                     </div>
@@ -200,6 +231,7 @@ export default function AdminProfilePage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="Enter your email"
+                        disabled={!isEditing}
                         required
                       />
                     </div>
@@ -215,6 +247,7 @@ export default function AdminProfilePage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="Enter your phone number"
+                        disabled={!isEditing}
                       />
                     </div>
                     <div className="space-y-2">
@@ -226,6 +259,7 @@ export default function AdminProfilePage() {
                         value={formData.address}
                         onChange={handleInputChange}
                         placeholder="Enter your address"
+                        disabled={!isEditing}
                       />
                     </div>
                   </div>
@@ -238,25 +272,28 @@ export default function AdminProfilePage() {
                       value={formData.bio}
                       onChange={handleInputChange}
                       placeholder="Tell us about yourself"
+                      disabled={!isEditing}
                       rows={4}
                     />
                   </div>
 
-                  <div className="flex justify-end space-x-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => router.back()}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={updating}
-                    >
-                      {updating ? "Updating..." : "Update Profile"}
-                    </Button>
-                  </div>
+                  {isEditing && (
+                    <div className="flex justify-end space-x-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={updating}
+                      >
+                        {updating ? "Updating..." : "Update Profile"}
+                      </Button>
+                    </div>
+                  )}
                 </form>
               </CardContent>
             </Card>

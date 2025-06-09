@@ -24,7 +24,7 @@ export const jobs: Job[] = [
     company: "Al Futtaim Group",
     location: "Dubai",
     country: "UAE",
-    salary: "$1200 - $1500 per month",
+    salary: "₹1,20,000 - ₹1,50,000 per month",
     description: "We are looking for experienced Shuttering Carpenters to join our construction team in Dubai. The ideal candidate will have at least 3 years of experience in formwork and shuttering operations.",
     responsibilities: [
       "Prepare and install wooden molds for concrete structures",
@@ -62,7 +62,7 @@ export const jobs: Job[] = [
     company: "Saudi Aramco",
     location: "Dammam",
     country: "Saudi Arabia",
-    salary: "$1100 - $1400 per month",
+    salary: "₹1,10,000 - ₹1,40,000 per month",
     description: "Join Saudi Aramco as a Pipe Fitter and work on one of the largest oil production facilities in the world. The successful candidate will be responsible for installing, maintaining, and repairing piping systems.",
     responsibilities: [
       "Install, repair, and maintain high and low pressure piping systems",
@@ -100,7 +100,7 @@ export const jobs: Job[] = [
     company: "Qatar Petroleum",
     location: "Doha",
     country: "Qatar",
-    salary: "$1300 - $1600 per month",
+    salary: "₹1,30,000 - ₹1,60,000 per month",
     description: "Qatar Petroleum is seeking skilled Electricians to join their maintenance team. The role involves installation and maintenance of electrical systems in industrial settings.",
     responsibilities: [
       "Install, maintain, and repair electrical wiring and equipment",
@@ -138,7 +138,7 @@ export const jobs: Job[] = [
     company: "Emaar Properties",
     location: "Dubai",
     country: "UAE",
-    salary: "$1000 - $1300 per month",
+    salary: "₹1,00,000 - ₹1,30,000 per month",
     description: "Emaar Properties is looking for experienced Masons for their upcoming residential projects in Dubai. The ideal candidate will have experience in bricklaying, block work, and concrete work.",
     responsibilities: [
       "Lay bricks, blocks, and other construction materials",
@@ -176,7 +176,7 @@ export const jobs: Job[] = [
     company: "Aldar Properties",
     location: "Abu Dhabi",
     country: "UAE",
-    salary: "$1200 - $1500 per month",
+    salary: "₹1,20,000 - ₹1,50,000 per month",
     description: "Aldar Properties is seeking experienced A/C Technicians for their maintenance division. The successful candidate will be responsible for the installation, maintenance, and repair of HVAC systems.",
     responsibilities: [
       "Install, maintain, and repair HVAC systems",
@@ -214,7 +214,7 @@ export const jobs: Job[] = [
     company: "ALEC Engineering",
     location: "Dubai",
     country: "UAE",
-    salary: "$1100 - $1400 per month",
+    salary: "₹1,10,000 - ₹1,40,000 per month",
     description: "ALEC Engineering is looking for experienced Steel Fixers to join their construction team. The ideal candidate will have experience in reinforcement steel installation for concrete structures.",
     responsibilities: [
       "Read and interpret construction drawings",

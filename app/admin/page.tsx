@@ -682,7 +682,7 @@ function JobForm({
               <FormItem>
                 <FormLabel>Salary</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. $1200 - $1500 per month" {...field} />
+                  <Input placeholder="e.g. ₹1,20,000 - ₹1,50,000 per month" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

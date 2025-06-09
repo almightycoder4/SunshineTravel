@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // Helper function to verify JWT token
 function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string; role: string };
+    return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
   } catch (error) {
     return null;
   }
@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest) {
     await connectToDatabase();
     
     // Get user from database
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       return NextResponse.json(
@@ -89,7 +89,7 @@ export async function PUT(request: NextRequest) {
 
     // Update password in database
     const result = await User.findByIdAndUpdate(
-      decoded.userId,
+      decoded.id,
       { 
         password: hashedNewPassword,
         updatedAt: new Date()
@@ -107,7 +107,7 @@ export async function PUT(request: NextRequest) {
     // Log the password change activity (optional)
     try {
       const activityLog = new ActivityLog({
-        userId: decoded.userId,
+        userId: decoded.id,
         action: 'Password Change',
         resource: 'User Account',
         details: 'Password changed successfully',

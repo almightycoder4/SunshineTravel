@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, MapPin, DollarSign } from "lucide-react";
+import { Briefcase, MapPin, IndianRupee } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -33,6 +34,7 @@ interface Job {
 export default function LatestJobs() {
   const [latestJobs, setLatestJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     AOS.init({
@@ -45,12 +47,21 @@ export default function LatestJobs() {
   useEffect(() => {
     const fetchLatestJobs = async () => {
       try {
-        const response = await fetch('/api/jobs?featured=true');
-        const data = await response.json();
+        // First try to get featured jobs
+        let response = await fetch('/api/jobs?featured=true');
+        let data = await response.json();
         
-        if (data.success) {
+        if (data.success && data.jobs.length > 0) {
           // Get the latest 4 featured jobs
           setLatestJobs(data.jobs.slice(0, 4));
+        } else {
+          // If no featured jobs, get the latest 4 jobs
+          response = await fetch('/api/jobs');
+          data = await response.json();
+          
+          if (data.success) {
+            setLatestJobs(data.jobs.slice(0, 4));
+          }
         }
       } catch (error) {
         console.error('Error fetching latest jobs:', error);
@@ -118,15 +129,17 @@ export default function LatestJobs() {
                     <span>{job.location}, {job.country}</span>
                   </div>
                   <div className="flex items-center text-gray-600 dark:text-gray-400">
-                    <DollarSign className="h-4 w-4 mr-2" />
+                    <IndianRupee className="h-4 w-4 mr-2" />
                     <span>{job.salary}</span>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <Link href={`/apply?job=${job.title}`}>
-                    <Button>Apply Now</Button>
-                  </Link>
+                  {user?.role !== 'admin' && (
+                    <Link href={`/apply?job=${job.title}`}>
+                      <Button>Apply Now</Button>
+                    </Link>
+                  )}
                   <Link href={`/jobs/${job._id}`} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                     View Details →
                   </Link>

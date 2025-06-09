@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Sun, Moon, User, ChevronDown, UserCircle, Lock, Activity, HelpCircle, LogOut } from "lucide-react";
+import { Menu, X, Sun, Moon, User, ChevronDown, UserCircle, Lock, Activity, HelpCircle, LogOut, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
@@ -30,6 +30,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileAccountOpen, setIsMobileAccountOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,7 +78,9 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8 items-center">
-            {navLinks.map((link) => (
+            {navLinks
+              .filter(link => !(user && user.role === 'admin' && link.href === '/apply'))
+              .map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -113,9 +116,13 @@ export default function Navbar() {
                     Web Activity
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleMenuItemClick('/admin/help')}>
-                    <HelpCircle className="mr-2 h-4 w-4" />
-                    Help
-                  </DropdownMenuItem>
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  Help
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMenuItemClick('/admin/success-stories')}>
+                  <Star className="mr-2 h-4 w-4" />
+                  Success Stories
+                </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600 dark:text-red-400">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -168,7 +175,9 @@ export default function Navbar() {
         <div className="md:hidden bg-white dark:bg-gray-900 shadow-lg">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex flex-col space-y-4">
-              {navLinks.map((link) => (
+              {navLinks
+                .filter(link => !(user && user.role === 'admin' && link.href === '/apply'))
+                .map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -181,62 +190,86 @@ export default function Navbar() {
               
               {user && user.role === 'admin' ? (
                 <div className="px-3 py-2">
-                  <div className="text-gray-700 dark:text-gray-300 font-medium mb-2 flex items-center">
-                    <User className="mr-1 h-4 w-4" />
-                    My Account
-                  </div>
-                  <div className="ml-4 space-y-1">
-                    <button
-                      onClick={() => {
-                        handleMenuItemClick('/admin/profile');
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
-                    >
-                      <UserCircle className="mr-2 h-4 w-4" />
-                      My Profile
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleMenuItemClick('/admin/change-password');
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
-                    >
-                      <Lock className="mr-2 h-4 w-4" />
-                      Change Password
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleMenuItemClick('/admin/activity');
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
-                    >
-                      <Activity className="mr-2 h-4 w-4" />
-                      Web Activity
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleMenuItemClick('/admin/help');
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
-                    >
-                      <HelpCircle className="mr-2 h-4 w-4" />
-                      Help
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setIsOpen(false);
-                      }}
-                      className="block w-full text-left px-2 py-1 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors flex items-center"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setIsMobileAccountOpen(!isMobileAccountOpen)}
+                    className="w-full text-left text-gray-700 dark:text-gray-300 font-medium mb-2 flex items-center justify-between hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <User className="mr-1 h-4 w-4" />
+                      My Account
+                    </div>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isMobileAccountOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isMobileAccountOpen && (
+                    <div className="ml-4 space-y-1">
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick('/admin/profile');
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
+                      >
+                        <UserCircle className="mr-2 h-4 w-4" />
+                        My Profile
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick('/admin/change-password');
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
+                      >
+                        <Lock className="mr-2 h-4 w-4" />
+                        Change Password
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick('/admin/activity');
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
+                      >
+                        <Activity className="mr-2 h-4 w-4" />
+                        Web Activity
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick('/admin/help');
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
+                      >
+                        <HelpCircle className="mr-2 h-4 w-4" />
+                        Help
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick('/admin/success-stories');
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors flex items-center"
+                      >
+                        <Star className="mr-2 h-4 w-4" />
+                        Success Stories
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsOpen(false);
+                          setIsMobileAccountOpen(false);
+                        }}
+                        className="block w-full text-left px-2 py-1 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors flex items-center"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link

@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // Helper function to verify JWT token
 function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string; role: string };
+    return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
   } catch (error) {
     return null;
   }
@@ -51,10 +51,8 @@ export async function GET(request: NextRequest) {
 
     await connectToDatabase();
     
-    // Build query filter
-    const filter: any = {
-      userId: decoded.userId
-    };
+    // Build query filter - Admin can see all activities
+    const filter: any = {};
 
     if (status && status !== 'all') {
       filter.status = status;
@@ -131,7 +129,7 @@ export async function POST(request: NextRequest) {
     
     // Create activity log
     const activityLog = new ActivityLog({
-      userId: decoded.userId,
+      userId: decoded.id,
       action,
       resource,
       details,

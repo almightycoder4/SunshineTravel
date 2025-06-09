@@ -29,18 +29,27 @@ const teamMembers = [
 const officeLocations = [
   {
     city: "Delhi",
-    address: "123, Main Street, New Delhi - 110001",
-    phone: "+91 7007153130",
+    address: "Office - 27-B No-5 1st Floor Khizrabad, Near Lions Hospital, New Friends Colony, New Delhi - 110025 India",
+    phone: "+91-9628454070",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 28.5355,
+    longitude: 77.2910,
   },
   {
     city: "Mau",
-    address: "456, Park Avenue, Mau, Uttar Pradesh - 275101",
-    phone: "+91 8112384070",
+    address: "Sunshine Travel Consultancy, Salahababad Railway Crossing, Belchaura Road City Mau - 275101 (U.P) Mob - 7007153130 (Riyaz Khan)",
+    phone: "+91-7007153130",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 26.7751,
+    longitude: 82.1490,
   },
   {
     city: "Ghazipur",
-    address: "789, River Road, Ghazipur, Uttar Pradesh - 233001",
-    phone: "+91 7007153130",
+    address: "Sunshine Educational Training Institute, Bhitari Pahas, Jabalabad Mahd, Ghazipur - 275102 (U.P) Mob - 8112384070 (Prince Vishwakarma)",
+    phone: "+91-8112384070",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 25.5788,
+    longitude: 83.5615,
   },
 ];
 

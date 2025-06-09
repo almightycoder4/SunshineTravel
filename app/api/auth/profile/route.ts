@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // Helper function to verify JWT token
 function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string; role: string };
+    return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
   } catch (error) {
     return null;
   }
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     }
 
     await connectToDatabase();
-    const user = await User.findById(decoded.userId).select('-password');
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
       return NextResponse.json(
@@ -102,7 +102,7 @@ export async function PUT(request: NextRequest) {
     // Check if email is already taken by another user
     const existingUser = await User.findOne({
       email,
-      _id: { $ne: decoded.userId }
+      _id: { $ne: decoded.id }
     });
 
     if (existingUser) {
@@ -113,7 +113,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get current user data for comparison
-    const currentUser = await User.findById(decoded.userId);
+    const currentUser = await User.findById(decoded.id);
 
     if (!currentUser) {
       return NextResponse.json(
@@ -133,7 +133,7 @@ export async function PUT(request: NextRequest) {
     };
 
     const result = await User.findByIdAndUpdate(
-      decoded.userId,
+      decoded.id,
       updateData,
       { 
         new: true,
@@ -160,7 +160,7 @@ export async function PUT(request: NextRequest) {
 
       if (changedFields.length > 0) {
         const activityLog = new ActivityLog({
-          userId: decoded.userId,
+          userId: decoded.id,
           action: 'Profile Update',
           resource: 'User Profile',
           details: `Updated fields: ${changedFields.join(', ')}`,

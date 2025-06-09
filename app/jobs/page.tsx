@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Briefcase, MapPin, DollarSign, Search, Filter, Plus, Edit, Trash2 } from "lucide-react";
+import { Briefcase, MapPin, IndianRupee, Search, Filter, Plus, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -322,7 +322,7 @@ export default function JobsPage() {
                           id="salary"
                           value={newJob.salary}
                           onChange={(e) => setNewJob({...newJob, salary: e.target.value})}
-                          placeholder="e.g. $5000 - $8000"
+                          placeholder="e.g. ₹50,000 - ₹80,000"
                         />
                       </div>
                       <div>
@@ -493,7 +493,7 @@ export default function JobsPage() {
                           <span>{job.location}, {job.country}</span>
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-400">
-                          <DollarSign className="h-4 w-4 mr-1" />
+                          <IndianRupee className="h-4 w-4 mr-1" />
                           <span>{job.salary}</span>
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-400">
@@ -524,9 +524,11 @@ export default function JobsPage() {
                         <Link href={`/jobs/${job._id}`}>
                           <Button variant="outline">View Details</Button>
                         </Link>
-                        <Link href={`/apply?job=${job.title}`}>
-                          <Button>Apply Now</Button>
-                        </Link>
+                        {user?.role !== 'admin' && (
+                          <Link href={`/apply?job=${job.title}`}>
+                            <Button>Apply Now</Button>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>

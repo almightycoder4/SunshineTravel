@@ -32,18 +32,27 @@ const formSchema = z.object({
 const officeLocations = [
   {
     city: "Delhi",
-    address: "123, Main Street, New Delhi - 110001",
-    phone: "+91 7007153130",
+    address: "Office - 27-B No-5 1st Floor Khizrabad, Near Lions Hospital, New Friends Colony, New Delhi - 110025 India",
+    phone: "+91-9628454070",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 28.5355,
+    longitude: 77.2910,
   },
   {
     city: "Mau",
-    address: "456, Park Avenue, Mau, Uttar Pradesh - 275101",
-    phone: "+91 8112384070",
+    address: "Sunshine Travel Consultancy, Salahababad Railway Crossing, Belchaura Road City Mau - 275101 (U.P) Mob - 7007153130 (Riyaz Khan)",
+    phone: "+91-7007153130",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 26.7751,
+    longitude: 82.1490,
   },
   {
     city: "Ghazipur",
-    address: "789, River Road, Ghazipur, Uttar Pradesh - 233001",
-    phone: "+91 7007153130",
+    address: "Sunshine Educational Training Institute, Bhitari Pahas, Jabalabad Mahd, Ghazipur - 275102 (U.P) Mob - 8112384070 (Prince Vishwakarma)",
+    phone: "+91-8112384070",
+    email: "sunshinetravel40@gmail.com",
+    latitude: 25.5788,
+    longitude: 83.5615,
   },
 ];
 
@@ -283,12 +292,33 @@ export default function ContactPage() {
                 
                 <div className="space-y-6">
                   {officeLocations.map((office, index) => (
-                    <div key={index} className="flex items-start">
-                      <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
-                      <div>
-                        <h3 className="font-medium">{office.city} Office</h3>
-                        <p className="text-gray-600 dark:text-gray-400">{office.address}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{office.phone}</p>
+                    <div key={index} className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-start">
+                        <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
+                        <div className="flex-1">
+                          <h3 className="font-medium text-lg mb-2">{office.city} Office</h3>
+                          <p className="text-gray-600 dark:text-gray-400 mb-2">{office.address}</p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+                            <div className="flex items-center">
+                              <Phone className="h-4 w-4 text-blue-600 mr-2" />
+                              <span className="text-gray-600 dark:text-gray-400">{office.phone}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <Mail className="h-4 w-4 text-blue-600 mr-2" />
+                              <span className="text-gray-600 dark:text-gray-400">{office.email}</span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const googleMapsUrl = `https://www.google.com/maps?q=${office.latitude},${office.longitude}`;
+                              window.open(googleMapsUrl, '_blank');
+                            }}
+                            className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 rounded-md transition-colors"
+                          >
+                            <MapPin className="h-4 w-4 mr-2" />
+                            View on Google Maps
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -73,7 +73,14 @@ export default function Footer() {
               <li className="flex items-start">
                 <PhoneCall className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
                 <div>
-                  <p className="text-gray-400">Riyaz Khan</p>
+                  <p className="text-gray-400">Online</p>
+                  <p className="text-white">+91 9547-230684</p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <PhoneCall className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
+                <div>
+                  <p className="text-gray-400">Prince Vishwakarma</p>
                   <p className="text-white">+91 7007153130</p>
                 </div>
               </li>
@@ -86,7 +93,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start">
                 <Mail className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <p className="text-white">sunshine.travel40@gmail.com</p>
+                <p className="text-white">Sunshinetraveltc@gmail.com</p>
               </li>
             </ul>
           </div>
@@ -97,15 +104,24 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <p className="text-gray-400">Delhi Office</p>
+                <div>
+                  <p className="text-white font-medium">Delhi Office</p>
+                  <p className="text-gray-400 text-sm">Near Lions Hospital, New Friends Colony, New Delhi</p>
+                </div>
               </li>
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <p className="text-gray-400">Mau Office</p>
+                <div>
+                  <p className="text-white font-medium">Mau Office</p>
+                  <p className="text-gray-400 text-sm">Salahababad Railway Crossing, Mau</p>
+                </div>
               </li>
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <p className="text-gray-400">Ghazipur Office</p>
+                <div>
+                  <p className="text-white font-medium">Ghazipur Office</p>
+                  <p className="text-gray-400 text-sm">Bhitari Pahas, Jabalabad Mahd, Ghazipur</p>
+                </div>
               </li>
             </ul>
           </div>
