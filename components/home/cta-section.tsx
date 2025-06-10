@@ -86,7 +86,7 @@ export default function CTASection() {
               className="flex items-center justify-center text-white hover:text-yellow-300 transition-colors"
             >
               <Mail className="mr-2 h-5 w-5" />
-              <span>sunshine.travel40@gmail.com</span>
+              <span>sunshinetravel40@gmail.com</span>
             </a>
           </div>
         </div>

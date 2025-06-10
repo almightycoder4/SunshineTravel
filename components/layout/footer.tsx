@@ -73,14 +73,14 @@ export default function Footer() {
               <li className="flex items-start">
                 <PhoneCall className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
                 <div>
-                  <p className="text-gray-400">Online</p>
-                  <p className="text-white">+91 9547-230684</p>
+                  <p className="text-gray-400">Managing-Director</p>
+                  <p className="text-white">0547-2220686</p>
                 </div>
               </li>
               <li className="flex items-start">
                 <PhoneCall className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
                 <div>
-                  <p className="text-gray-400">Prince Vishwakarma</p>
+                  <p className="text-gray-400">Riyaz Khan</p>
                   <p className="text-white">+91 7007153130</p>
                 </div>
               </li>
@@ -93,7 +93,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start">
                 <Mail className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <p className="text-white">Sunshinetraveltc@gmail.com</p>
+                <p className="text-white">sunshinetravel40@gmail.com</p>
               </li>
             </ul>
           </div>

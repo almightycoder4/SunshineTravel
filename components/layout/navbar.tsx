@@ -84,7 +84,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors"
+                className={`${scrolled ? "text-gray-700":"text-gray-300"} hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors`}
               >
                 {link.label}
               </Link>
@@ -133,7 +133,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/admin"
-                className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors flex items-center"
+                className={`${scrolled ? "text-gray-700": "text-gray-300"} hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors flex items-center`}
               >
                 <User className="mr-1 h-4 w-4" />
                 Admin
