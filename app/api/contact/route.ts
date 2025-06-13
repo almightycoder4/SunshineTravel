@@ -13,21 +13,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // In a production environment, you would set up a real email service
-    // This is a placeholder for demonstration purposes
+    // Create email transporter using environment variables
     const transporter = nodemailer.createTransport({
-      host: "smtp.example.com",
-      port: 587,
-      secure: false,
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT || "587"),
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: "your-email@example.com",
-        pass: "your-password",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: `"${name}" <${email}>`,
-      to: "sunshinetravel40@gmail.com",
+      from: process.env.EMAIL_FROM,
+      to: process.env.EMAIL_TO,
+      replyTo: email,
       subject: `Contact Form: ${subject}`,
       text: `
         Name: ${name}
@@ -52,11 +52,13 @@ export async function POST(request: Request) {
       `,
     };
 
-    // In a real implementation, you would uncomment this
-    // await transporter.sendMail(mailOptions);
+    // Send the email
+    await transporter.sendMail(mailOptions);
 
-    // For demo purposes, just return success
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      message: "Message sent successfully!" 
+    });
   } catch (error) {
     console.error("Error in contact form submission:", error);
     return NextResponse.json(

@@ -82,20 +82,43 @@ export default function ApplyPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
-    // Simulate API call/form submission
     try {
-      // In a real app, this would be an API call to submit the form data
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Application Submitted!",
-        description: "We'll review your application and get back to you soon.",
-        variant: "default",
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('phone', values.phone);
+      formData.append('email', values.email);
+      formData.append('jobRole', values.jobRole);
+      formData.append('country', values.country);
+      formData.append('experience', values.experience);
+      if (values.message) {
+        formData.append('message', values.message);
+      }
+      if (resumeFile) {
+        formData.append('resume', resumeFile);
+      }
+
+      const response = await fetch('/api/apply', {
+        method: 'POST',
+        body: formData,
       });
-      
-      form.reset();
-      setResumeFile(null);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Application Submitted!",
+          description: "We'll review your application and get back to you soon.",
+          variant: "default",
+        });
+        
+        form.reset();
+        setResumeFile(null);
+      } else {
+        throw new Error(data.error || 'Failed to submit application');
+      }
     } catch (error) {
+      console.error('Application form error:', error);
       toast({
         title: "Something went wrong",
         description: "Your application could not be submitted. Please try again.",
@@ -398,7 +421,7 @@ export default function ApplyPage() {
                       </div>
                       <div>
                         <h4 className="font-medium">Get Response</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">We'll review and contact you for next steps.</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">We&apos;ll review and contact you for next steps.</p>
                       </div>
                     </div>
                   </div>
