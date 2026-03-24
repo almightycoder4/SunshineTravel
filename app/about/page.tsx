@@ -5,22 +5,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Users, Award, Clock, Globe } from "lucide-react";
+import { MapPin, Phone, Mail, Users, Award, Clock, Globe, Building, GraduationCap, CheckCircle, Briefcase } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 const teamMembers = [
   {
-    name: "Riyaz Khan",
+    name: "Jitendra Kumar",
     role: "Director",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    image: "https://i.ibb.co/S7fpYkJv/01.jpg",
+    contact: "+91 9628454070, 0547-2220686",
+    whatsapp: "https://wa.me/917007153130",
+  },
+  {
+    name: "Riyaz Khan",
+    role: "Recruitment Controller",
+    image: "https://i.ibb.co/rKKRL795/03.jpg",
     contact: "+91 7007153130",
     whatsapp: "https://wa.me/917007153130",
   },
   {
     name: "Prince Vishwakarma",
-    role: "Manager",
-    image: "https://randomuser.me/api/portraits/men/22.jpg",
+    role: "Recruitment Controller",
+    image: "https://i.ibb.co/39cVvLCR/02.jpg",
     contact: "+91 8112384070",
     whatsapp: "https://wa.me/918112384070",
   },
@@ -91,7 +98,7 @@ export default function AboutPage() {
           <div className="flex flex-col justify-center" data-aos="fade-left">
             <h2 className="text-3xl font-bold mb-6">Our Story</h2>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
-              Established in 2015, Sunshine Travel Consultancy has been a trusted name in international manpower recruitment, specializing in connecting skilled Indian professionals with opportunities in Gulf countries.
+              Established in 2008, Sunshine Travel Consultancy has been a trusted name in international manpower recruitment, specializing in connecting skilled Indian professionals with opportunities in Gulf countries.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
               Our extensive network of employers across UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, and Oman allows us to offer a wide range of positions in civil, mechanical, electrical, and administrative sectors.
@@ -144,6 +151,236 @@ export default function AboutPage() {
                 </Button>
               </Link>
             </div>
+          </div>
+        </div>
+
+        {/* Our Credentials */}
+        <div className="mb-20" data-aos="fade-up">
+          <h2 className="text-3xl font-bold text-center mb-12">Our Credentials</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="0">
+              <CardContent className="p-6 flex items-start">
+                <Award className="h-12 w-12 text-blue-600 mr-4 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Government Recognized</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Registered under the Ministry of External Affairs, Government of India, ensuring legal compliance and trust.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="100">
+              <CardContent className="p-6 flex items-start">
+                <CheckCircle className="h-12 w-12 text-blue-600 mr-4 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">ISO 9001:2015 Certified</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Quality certified recruitment agency operating with the highest standards of professional integrity.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="200">
+              <CardContent className="p-6 flex items-start">
+                <Users className="h-12 w-12 text-blue-600 mr-4 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Expert Team</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Our HR professionals are excellent in all aspects of recruitment and talent management.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="300">
+              <CardContent className="p-6 flex items-start">
+                <Globe className="h-12 w-12 text-blue-600 mr-4 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Legacy Since 2008</h3>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Over 15 years of experience in recruiting high-quality manpower for Gulf countries.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Infrastructure & Reach */}
+        <div className="mb-20" data-aos="fade-up">
+          <h2 className="text-3xl font-bold text-center mb-12">Infrastructure & Reach</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="border hover:border-blue-300 transition-all duration-300" data-aos="fade-up" data-aos-delay="0">
+              <CardContent className="p-6 text-center">
+                <Building className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold mb-2">Head Office (Mau, UP)</h3>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  Includes a Technical Trade Test Center with comprehensive testing facilities
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border hover:border-blue-300 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+              <CardContent className="p-6 text-center">
+                <Building className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold mb-2">Branch Office (New Delhi)</h3>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  Strategically located in the capital to manage nationwide operations
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border hover:border-blue-300 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+              <CardContent className="p-6 text-center">
+                <Globe className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold mb-2">Global Presence</h3>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  Overseas office in Dubai with extensive coordinator network across India
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border hover:border-blue-300 transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+              <CardContent className="p-6 text-center">
+                <GraduationCap className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold mb-2">Training Institute</h3>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  Sunshine Educational Training Institute in Ghazipur for candidate preparation
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Industries & Categories */}
+        <div className="mb-20" data-aos="fade-up">
+          <h2 className="text-3xl font-bold text-center mb-4">Industries & Manpower Categories</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
+            We specialize in providing both White Collar and Blue Collar professionals across various sectors
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="0">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Briefcase className="h-8 w-8 text-blue-600 mr-3" />
+                  <h3 className="text-xl font-bold">White Collar</h3>
+                </div>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Engineers (Software, Civil, Electrical, Mechanical)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Supervisors</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Administrative Staff</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="100">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Building className="h-8 w-8 text-blue-600 mr-3" />
+                  <h3 className="text-xl font-bold">Blue Collar</h3>
+                </div>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Masons (Tile, Block, Plaster)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Steel Fixers, Carpenters, Painters</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Welders and Fabricators</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="200">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Clock className="h-8 w-8 text-blue-600 mr-3" />
+                  <h3 className="text-xl font-bold">Logistics</h3>
+                </div>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Light & Heavy Drivers (Trailer, Truck, Bus)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Heavy Equipment Operators (JCB, Crane, Forklift)</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-lg" data-aos="fade-up" data-aos-delay="300">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <Users className="h-8 w-8 text-blue-600 mr-3" />
+                  <h3 className="text-xl font-bold">Support Staff</h3>
+                </div>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Gardeners</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Cleaners</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Construction Helpers</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Valued Clients */}
+        <div className="mb-20" data-aos="fade-up">
+          <h2 className="text-3xl font-bold text-center mb-4">Our Valued Clients</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
+            We take pride in our long-standing associations with reputed international firms across the Gulf region
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[
+              "Al Jabber Alec",
+              "Engineering Contracting Co. (ECC)",
+              "Amana Steel / Amana Pipeline",
+              "Trojan General Contracting Co.",
+              "Beaver Gulf Contracting Co.",
+              "Danube Building Material Co.",
+            ].map((client, index) => (
+              <Card 
+                key={index}
+                className="border hover:border-blue-300 transition-all duration-300 hover:shadow-lg"
+                data-aos="fade-up"
+                data-aos-delay={index * 50}
+              >
+                <CardContent className="p-4 flex items-center justify-center h-24 text-center">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{client}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
