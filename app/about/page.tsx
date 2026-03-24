@@ -11,21 +11,21 @@ import "aos/dist/aos.css";
 
 const teamMembers = [
   {
-    name: "Jitendra Kumar",
-    role: "Director",
+    name: "Mr. Jitendra Kumar",
+    role: "Managing Director",
     image: "https://i.ibb.co/S7fpYkJv/01.jpg",
     contact: "+91 9628454070, 0547-2220686",
-    whatsapp: "https://wa.me/917007153130",
+    whatsapp: "https://wa.me/9628454070",
   },
   {
-    name: "Riyaz Khan",
+    name: "Mr. Riyaz Khan",
     role: "Recruitment Controller",
     image: "https://i.ibb.co/rKKRL795/03.jpg",
     contact: "+91 7007153130",
     whatsapp: "https://wa.me/917007153130",
   },
   {
-    name: "Prince Vishwakarma",
+    name: "Mr. Prince Vishwakarma",
     role: "Recruitment Controller",
     image: "https://i.ibb.co/39cVvLCR/02.jpg",
     contact: "+91 8112384070",
